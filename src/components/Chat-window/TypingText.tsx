@@ -11,7 +11,6 @@ const TypingText = ({ text, speed = 30, onComplete }: TypingTextProps) => {
 
   useEffect(() => {
     let index = 0;
-
     setDisplayText("");
 
     const interval = setInterval(() => {
