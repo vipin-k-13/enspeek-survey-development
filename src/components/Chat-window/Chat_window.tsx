@@ -2,7 +2,7 @@ import React from "react";
 import "./Chat_window.css";
 import { getChatBot, getChatBotV2, getChatHistory } from "../../api/ApiHook";
 import { replaceSymbols, setLocalStorage } from "../../lib/utils";
-import { Info, LoaderCircle, SendHorizontal } from "lucide-react";
+import { BadgeCheck, Info, LoaderCircle, SendHorizontal } from "lucide-react";
 // import TypingText from "./TypingText";
 // import TypingHTML from "./TypingHTML";
 
@@ -51,6 +51,8 @@ const Chat_window = () => {
 
   const showThinking =
     isPending || (chat.length === 0 && (isFirstChatFetching || isChatHistoryFetching));
+
+  const isSurveyEnded = !!chat[chat.length - 1]?.EOS;
 
   const selectOption = async (optionText?: string) => {
     const updatedChat = [...chat];
@@ -187,7 +189,22 @@ const Chat_window = () => {
   return (
     <div>
       <main className="chatbot-container container">
-        <div className="chatbot-theme-strip" aria-hidden="true" />
+        <div className="pr-[10px]">
+          <div className="chatbot-theme-strip" aria-hidden="true" />
+        </div>
+        {isSurveyEnded ? (
+          <section className="survey-complete-view" aria-live="polite">
+            <div className="survey-complete-card">
+              <div className="survey-complete-logo">
+                <BadgeCheck size={30} strokeWidth={2.5} />
+              </div>
+              <h1 className="survey-complete-heading">Survey Session Ended</h1>
+              <p className="survey-complete-message">
+                The survey has ended. You may now close this window. Thank you for your participation!
+              </p>
+            </div>
+          </section>
+        ) : (
         <div className="chat-container">
           <div className="messages_box" ref={messagesRef}>
             {chat.map((msg, i) => {
@@ -335,52 +352,43 @@ const Chat_window = () => {
           </div>
           <div className="form-container">
             <form className="chat-input-form" onSubmit={userQuestion}>
-              {!chat[chat.length - 1]?.EOS ? (
-                <>
-                  <input
-                    type="text"
-                    id="userResInput"
-                    className="form-control me-2 userInput inputField"
-                    name="text"
-                    placeholder="Type you mesage..."
-                    disabled={isChatbarDisabled}
-                    autoFocus
-                    autoComplete="off"
-                    ref={inputRef}
-                    value={userQues}
-                    onChange={(e) => setUserQues(e.target.value)}
-                  />
+              <>
+                <input
+                  type="text"
+                  id="userResInput"
+                  className="form-control me-2 userInput inputField"
+                  name="text"
+                  placeholder="Type you mesage..."
+                  disabled={isChatbarDisabled}
+                  autoFocus
+                  autoComplete="off"
+                  ref={inputRef}
+                  value={userQues}
+                  onChange={(e) => setUserQues(e.target.value)}
+                />
 
-                  <button
-                    type="submit"
-                    className="btn chat-send-button"
-                    disabled={isChatbarDisabled}
-                    title="Send message"
-                    aria-label="Send message"
-                  >
-                    {isApiPending ? (
-                      <LoaderCircle
-                        color="var(--color-core-text-inverse)"
-                        size={20}
-                        className="spinner-icon"
-                      />
-                    ) : (
-                      <SendHorizontal color="var(--color-core-text-inverse)" size={20} />
-                    )}
-                  </button>
-                </>
-              ) : (
-                <div
-                  className="flex justify-center items-center gap-4 mx-auto font-semibold rounded-md p-5 text-core-text"
-                  role="alert"
+                <button
+                  type="submit"
+                  className="btn chat-send-button"
+                  disabled={isChatbarDisabled}
+                  title="Send message"
+                  aria-label="Send message"
                 >
-                  <Info color="var(--color-core-text)" size={20} />
-                  The survey has ended. You may now close this window. Thank you for your participation!
-                </div>
-              )}
+                  {isApiPending ? (
+                    <LoaderCircle
+                      color="var(--color-core-text-inverse)"
+                      size={20}
+                      className="spinner-icon"
+                    />
+                  ) : (
+                    <SendHorizontal color="var(--color-core-text-inverse)" size={20} />
+                  )}
+                </button>
+              </>
             </form>
           </div>
         </div>
+        )}
       </main>
     </div>
   );
