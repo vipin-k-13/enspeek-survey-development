@@ -1,11 +1,9 @@
 import React from "react";
-import Logo from "../../assets/logo2.png";
 import "./Chat_window.css";
 import { getChatBot, getChatBotV2, getChatHistory } from "../../api/ApiHook";
-import SendIcon from "../../assets/SendIcon";
 import BotImage from "../../assets/Bot_img.png";
 import { replaceSymbols, setLocalStorage } from "../../lib/utils";
-import InfoIcon from "../../assets/InfoIcon";
+import { Info, SendHorizontal } from "lucide-react";
 // import TypingText from "./TypingText";
 // import TypingHTML from "./TypingHTML";
 
@@ -138,12 +136,6 @@ const Chat_window = () => {
 
   return (
     <div>
-      <header className="relative flex items-center justify-between px-4 py-2 bg-linear-to-t from-primary to-secondary shadow-md">
-        <img src={Logo} alt="Chat Bot Image" className="h-12 w-auto" />
-        <h1 className="absolute left-1/2 -translate-x-1/2 text-lg sm:text-2xl font-semibold text-white truncate max-w-[55%] sm:max-w-none">
-          Enspeek Surveys
-        </h1>
-      </header>
       <main className="chatbot-container container">
         <div className="chat-container">
           <div className="messages_box" ref={messagesRef}>
@@ -182,10 +174,9 @@ const Chat_window = () => {
                           />
                           {/* <TypingHTML html={msg.currentQues.qtext} /> */}
 
-                          {msg.qtextComplete &&
-                            msg.currentQues.qtype === "multiple-select" && (
+                          {msg.currentQues.qtype === "multiple-select" && (
                               <div className="my-1 italic flex items-center gap-2">
-                                <InfoIcon color="var(--color-core-info)" size={20} />
+                                <Info color="var(--color-core-info)" size={20} />
 
                                 <span>
                                   You can use space or comma as a separator
@@ -223,8 +214,7 @@ const Chat_window = () => {
 
                                     {/* MULTIPLE SELECT */}
                                     {msg.currentQues.qtype ===
-                                      "multiple-select" &&
-                                      msg.disclaimerComplete && (
+                                      "multiple-select" && (
                                         <button
                                           type="button"
                                           onClick={() =>
@@ -251,16 +241,17 @@ const Chat_window = () => {
                           </div>
 
                           {msg.currentQues.qtype === "multiple-select" &&
-                            msg.disclaimerComplete && (
+                            i === chat.length - 1 &&
+                            !msg.response && (
                               <div className="flex justify-end">
                                 <button
-                                  // onClick={() => selectOption()}
+                                  onClick={() => selectOption()}
                                   type="button"
                                   className="btn multi_submit"
                                   title="Click to submit"
                                   disabled={!!msg.response}
                                 >
-                                  <SendIcon color="var(--color-core-text-inverse)" size={20} />
+                                  <SendHorizontal color="var(--color-core-text-inverse)" size={20} />
                                 </button>
                               </div>
                             )}
@@ -295,7 +286,7 @@ const Chat_window = () => {
             )}
           </div>
           <div className="form-container">
-            <form className="flex" onSubmit={userQuestion}>
+            <form className="chat-input-form" onSubmit={userQuestion}>
               {!chat[chat.length - 1]?.EOS ? (
                 <>
                   <input
@@ -303,7 +294,7 @@ const Chat_window = () => {
                     id="userResInput"
                     className="form-control me-2 userInput inputField"
                     name="text"
-                    placeholder="Type your message..."
+                    placeholder="Type you mesage..."
                     disabled={chat[chat.length - 1]?.EOS}
                     autoFocus
                     autoComplete="off"
@@ -313,10 +304,12 @@ const Chat_window = () => {
 
                   <button
                     type="submit"
-                    className="btn"
+                    className="btn chat-send-button"
                     disabled={chat[chat.length - 1]?.EOS}
+                    title="Send message"
+                    aria-label="Send message"
                   >
-                    <SendIcon color="var(--color-core-text-inverse)" size={20} />
+                    <SendHorizontal color="var(--color-core-text-inverse)" size={20} />
                   </button>
                 </>
               ) : (
@@ -324,7 +317,7 @@ const Chat_window = () => {
                   className="flex justify-center items-center gap-4 mx-auto bg-core-surface-subtle border border-core-border-strong rounded-md p-5 text-core-text"
                   role="alert"
                 >
-                  <InfoIcon color="var(--color-core-text)" size={20} />
+                  <Info color="var(--color-core-text)" size={20} />
                   The survey has ended. You may now close this window. Thank you
                   for your participation!
                 </div>

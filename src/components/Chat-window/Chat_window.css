@@ -152,39 +152,64 @@
   position: sticky;
   bottom: 0px;
   background-color: var(--color-core-surface);
-  padding: 15px;
+  padding: 14px 16px;
   border-top: 1px solid var(--color-core-border-soft);
   border-radius: 0 0 1rem 1rem;
   z-index: 10;
 }
 
+.chat-input-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 54px;
+  padding: 7px;
+  border: 1px solid var(--color-core-border-strong);
+  border-radius: 999px;
+  background-color: var(--color-core-surface-soft);
+  box-shadow: 0 8px 24px -18px rgba(37, 43, 89, 0.5);
+}
+
 .inputField  {
   flex: 1;
-  border: 1px solid var(--color-core-border-strong);
-  background-color: var(--color-core-surface-soft);
+  border: none;
+  background-color: transparent;
   color: var(--color-core-text);
-  border-radius: 5px;
-  padding: 10px 15px;
-  margin-right: 10px;
+  border-radius: 999px;
+  padding: 10px 14px;
+  margin-right: 0;
   transition: all 0.2s ease;
   min-width: 0;
+  height: 40px;
 }
 
 .inputField:focus {
-  border-color: var(--color-core-primary);
-  background-color: var(--color-core-surface);
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-core-border-soft);
+  box-shadow: none;
+}
+
+.inputField::placeholder {
+  color: var(--color-core-text-muted);
 }
 
 .form-container button {
   background: var(--color-core-primary) !important;
   border: none;
   color: var(--color-core-text-inverse);
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 0;
+  border-radius: 999px;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.chat-send-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
 }
 
 .form-container button:hover:not(:disabled) {
