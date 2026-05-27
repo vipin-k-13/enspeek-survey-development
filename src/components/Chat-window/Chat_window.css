@@ -1,22 +1,30 @@
 .chatbot-container {
   height: calc(100vh - 110px);
+  height: calc(100dvh - 110px);
   margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-direction: column;
-  box-shadow: 1px 1px 10px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px -10px rgba(79, 86, 230, 0.15);
   border-radius: 1rem;
+  background-color: var(--color-core-surface);
+  border: 1px solid var(--color-core-border-soft);
+  transition: all 0.3s ease;
 }
 
 .chat-container {
   border-radius: 1rem 1rem 0 0;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  height: 100%;
 }
-
 
 .messages_box {
   border-radius: 1rem 1rem 0 0;
-  height: calc(100vh - 220px);
   overflow-y: auto;
   flex: 1 1 auto;
   margin: 15px;
@@ -33,8 +41,8 @@
   flex-direction: column;
   gap: 5px;
   align-items: center;
+  width: 100%;
 }
-
 
 .bot-message {
   display: flex;
@@ -43,8 +51,8 @@
   margin-bottom: 10px;
   margin-top: 10px;
   gap: 10px;
-  max-width: 70%;
-  min-width: 250px;
+  max-width: 85%;
+  min-width: 200px;
 }
 
 .user-message {
@@ -54,31 +62,33 @@
 }
 
 .message-content {
-  background-color: #f1f1f1;
-  color: rgb(0, 0, 0);
+  background-color: var(--color-core-surface-subtle);
+  color: var(--color-core-text);
+  border: 1px solid var(--color-core-border-soft);
   padding: 15px 20px;
   border-radius: 15px;
   border-bottom-left-radius: 0;
   width: fit-content;
-  min-width: 250px;
+  min-width: 200px;
   max-width: 100%;
   word-wrap: break-word;
 }
 
 ._bot_response {
-  background-color: #d0dee8;
-  color: rgb(0, 0, 0);
-  padding: 10px;
+  background-color: var(--color-core-primary);
+  color: var(--color-core-text-inverse);
+  padding: 10px 15px;
   border-radius: 15px;
   border-bottom-right-radius: 0;
   width: fit-content;
-  max-width: 70%;
+  max-width: 85%;
 }
 
 .avatar {
-  height: 50px;
-  width: 50px;
+  height: 40px;
+  width: 40px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .bot_message {
@@ -87,29 +97,37 @@
   gap: 0.75rem;
 }
 
-
 .option-button {
   width: 100%;
-  border: none;
-  background: #d3d3e6;
+  border: 1px solid var(--color-core-border-strong);
+  background: var(--color-core-surface-soft);
+  color: var(--color-core-text);
   border-radius: 20px;
   cursor: pointer;
   min-width: 100px;
+  padding: 6px 12px;
+  transition: all 0.2s ease;
 }
 
+.option-button:hover:not(:disabled) {
+  background: var(--color-core-surface-subtle);
+  border-color: var(--color-core-primary-soft);
+  color: var(--color-core-primary);
+}
 
 .selected-text {
-  color: blue !important;
+  color: var(--color-core-primary) !important;
 }
 
 .selected-class {
-  background: linear-gradient(to bottom, #59e1d1, #3a4cb7) !important;
-  color: white;
+  background: var(--color-core-primary) !important;
+  color: var(--color-core-text-inverse) !important;
   font-weight: bold;
+  border-color: var(--color-core-primary-hover) !important;
 }
 
 .highlight-blue {
-  border: 2px solid #4262bb;
+  border: 2px solid var(--color-core-primary-soft);
 }
 
 .disabled-opacity {
@@ -117,47 +135,61 @@
 }
 
 .multi_submit {
-  background: linear-gradient(to bottom, #59e1d1, #3a4cb7) !important;
+  background: var(--color-core-primary) !important;
   border: none;
-  color: white;
-  padding: 4px 13px;
+  color: var(--color-core-text-inverse);
+  padding: 6px 16px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
+}
+
+.multi_submit:hover:not(:disabled) {
+  background: var(--color-core-primary-hover) !important;
 }
 
 .form-container {
   position: sticky;
   bottom: 0px;
-  background-color: #fff;
-  padding: 10px;
-  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-core-surface);
+  padding: 15px;
+  border-top: 1px solid var(--color-core-border-soft);
+  border-radius: 0 0 1rem 1rem;
   z-index: 10;
 }
 
-
 .inputField  {
   flex: 1;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-core-border-strong);
+  background-color: var(--color-core-surface-soft);
+  color: var(--color-core-text);
   border-radius: 5px;
-  padding: 10px;
+  padding: 10px 15px;
   margin-right: 10px;
+  transition: all 0.2s ease;
+  min-width: 0;
+}
+
+.inputField:focus {
+  border-color: var(--color-core-primary);
+  background-color: var(--color-core-surface);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-core-border-soft);
 }
 
 .form-container button {
-  background: linear-gradient(to bottom, #59e1d1, #3a4cb7) !important;
+  background: var(--color-core-primary) !important;
   border: none;
-  color: white;
+  color: var(--color-core-text-inverse);
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
 }
 
-.form-container button:hover {
-  background: linear-gradient(to bottom, #59e1d1, #3a4cb7) !important;
+.form-container button:hover:not(:disabled) {
+  background: var(--color-core-primary-hover) !important;
 }
-
 
 .typing {
   align-items: center;
@@ -166,7 +198,7 @@
 }
 .typing .dot {
   animation: mercuryTypingAnimation 1.8s infinite ease-in-out;
-  background-color: #080808;
+  background-color: var(--color-core-text-muted);
   border-radius: 50%;
   height: 7px;
   margin-right: 4px;
@@ -186,18 +218,52 @@
 .typing .dot:last-child {
   margin-right: 0;
 }
+
 @keyframes mercuryTypingAnimation {
   0% {
     transform: translateY(0px);
-    background-color: #ffffff;
+    background-color: var(--color-core-text-subtle);
   }
   28% {
     transform: translateY(-7px);
-    background: linear-gradient(to bottom, #59e1d1, #3a4cb7) !important;
+    background-color: var(--color-core-primary);
   }
   44% {
     transform: translateY(0px);
-    background-color: #ffffff;
+    background-color: var(--color-core-text-subtle);
   }
 }
 
+/* Responsive Breakpoints */
+@media (max-width: 639px) {
+  .chatbot-container {
+    height: calc(100vh - 64px);
+    height: calc(100dvh - 64px);
+    margin: 0;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+  .form-container {
+    border-radius: 0 !important;
+    padding: 10px;
+  }
+  .messages_box {
+    margin: 10px;
+    padding: 0 5px;
+  }
+}
+
+@media (min-width: 640px) {
+  .bot-message {
+    max-width: 70%;
+    min-width: 250px;
+  }
+  ._bot_response {
+    max-width: 70%;
+  }
+  .avatar {
+    height: 50px;
+    width: 50px;
+  }
+}

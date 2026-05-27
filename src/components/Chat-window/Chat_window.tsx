@@ -12,7 +12,7 @@ import InfoIcon from "../../assets/InfoIcon";
 const Chat_window = () => {
   const [chat, setChat] = React.useState<any[]>([]);
   const [userQues, setUserQues] = React.useState<string>("");
-  const { mutate, isPending, isSuccess } = getChatBot(setChat);
+  const { mutate, isPending, isSuccess } = getChatBot(setChat, chat);
   const [firstLoad, setFirstLoad] = React.useState(true);
   const messagesRef = React.useRef<HTMLDivElement>(null);
   const {
@@ -138,9 +138,9 @@ const Chat_window = () => {
 
   return (
     <div>
-      <header className="flex items-center justify-between px-2 py-2 bg-linear-to-t from-primary to-secondary shadow-md">
+      <header className="relative flex items-center justify-between px-4 py-2 bg-linear-to-t from-primary to-secondary shadow-md">
         <img src={Logo} alt="Chat Bot Image" className="h-12 w-auto" />
-        <h1 className="text-2xl font-semibold flex-1 text-center text-white">
+        <h1 className="absolute left-1/2 -translate-x-1/2 text-lg sm:text-2xl font-semibold text-white truncate max-w-[55%] sm:max-w-none">
           Enspeek Surveys
         </h1>
       </header>
@@ -185,7 +185,7 @@ const Chat_window = () => {
                           {msg.qtextComplete &&
                             msg.currentQues.qtype === "multiple-select" && (
                               <div className="my-1 italic flex items-center gap-2">
-                                <InfoIcon color="#3B82F6" size={20} />
+                                <InfoIcon color="var(--color-core-info)" size={20} />
 
                                 <span>
                                   You can use space or comma as a separator
@@ -260,7 +260,7 @@ const Chat_window = () => {
                                   title="Click to submit"
                                   disabled={!!msg.response}
                                 >
-                                  <SendIcon color="#fff" size={20} />
+                                  <SendIcon color="var(--color-core-text-inverse)" size={20} />
                                 </button>
                               </div>
                             )}
@@ -306,6 +306,7 @@ const Chat_window = () => {
                     placeholder="Type your message..."
                     disabled={chat[chat.length - 1]?.EOS}
                     autoFocus
+                    autoComplete="off"
                     value={userQues}
                     onChange={(e) => setUserQues(e.target.value)}
                   />
@@ -315,15 +316,15 @@ const Chat_window = () => {
                     className="btn"
                     disabled={chat[chat.length - 1]?.EOS}
                   >
-                    <SendIcon color="#fff" size={20} />
+                    <SendIcon color="var(--color-core-text-inverse)" size={20} />
                   </button>
                 </>
               ) : (
                 <div
-                  className="flex justify-center items-center gap-4 mx-auto bg-gray-200 border border-gray-400 rounded-md p-5 text-gray-800"
+                  className="flex justify-center items-center gap-4 mx-auto bg-core-surface-subtle border border-core-border-strong rounded-md p-5 text-core-text"
                   role="alert"
                 >
-                  <InfoIcon color="#1e2939" size={20} />
+                  <InfoIcon color="var(--color-core-text)" size={20} />
                   The survey has ended. You may now close this window. Thank you
                   for your participation!
                 </div>

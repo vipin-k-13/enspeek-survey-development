@@ -35,7 +35,7 @@ export const getChatHistory = (first: boolean) => {
   return { data, isPending, error };
 };
 
-export const getChatBot = (SetChat: (data: any) => void) => {
+export const getChatBot = (SetChat: (data: any) => void, chat: any[]) => {
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
   let masterData = getLocalStorage();
@@ -46,6 +46,13 @@ export const getChatBot = (SetChat: (data: any) => void) => {
   const { mutate, isPending, data, error, isSuccess } = useMutation({
     mutationKey: ["chatbotv3"],
     mutationFn: async (payload: any) => {
+      const lastChat = chat[chat.length - 1];
+      const preCode = lastChat?.currentQues?.qRowOptionList?.length
+        ? lastChat.currentQues.qRowOptionList.map(
+            (option: any) => option.optionID,
+          )
+        : [];
+
       const res = await apiRequest("post", url.chatbotv3.url, {
         content: payload.content,
         status: payload.status,
@@ -55,7 +62,7 @@ export const getChatBot = (SetChat: (data: any) => void) => {
         surveyID: surveyId,
         processID: studyId,
         ID: masterData["ID"],
-        preCode: [],
+        preCode: preCode,
       });
 
       return res.response;
