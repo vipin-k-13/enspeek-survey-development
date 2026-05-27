@@ -8,6 +8,9 @@ export function encFrData() {
 }
 
 export function decryptData(data: any) {
+    if (!data) return null;
+    if (typeof data !== "string") return data;
+
     try {
         const bytes = CryptoJS.AES.decrypt(data, encryptSecretKey);
         if (bytes.toString()) {
@@ -16,6 +19,7 @@ export function decryptData(data: any) {
         return data;
     } catch (e) {
         console.error("Decryption error:", e);
+        return data;
     }
 }
 
@@ -26,7 +30,8 @@ export const replaceSymbols = (response: string): string => {
 export function getLocalStorage() {
     let lcData: any = sessionStorage.getItem(encFrData());
     if (!lcData) return ({ sessionID: "", token: "" });
-    let masterData = decryptData(JSON.parse(lcData));
+    let parsedData = JSON.parse(lcData);
+    let masterData = decryptData(parsedData);
     return masterData;
 }
 

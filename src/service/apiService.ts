@@ -14,7 +14,7 @@ apiClient.interceptors.request.use(
   (config) => {
     // const token = localStorage.getItem("token");
     let lcData: any = sessionStorage.getItem(encFrData());
-    let masterData = decryptData(JSON.parse(lcData));
+    let masterData = lcData ? decryptData(JSON.parse(lcData)) : null;
     const token = masterData?.masterToken;
     if (token) {
       config.headers["x-access-token"] = `Bearer ${token}`;

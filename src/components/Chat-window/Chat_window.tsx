@@ -1,11 +1,27 @@
 import React from "react";
 import "./Chat_window.css";
 import { getChatBot, getChatBotV2, getChatHistory } from "../../api/ApiHook";
-import BotImage from "../../assets/Bot_img.png";
 import { replaceSymbols, setLocalStorage } from "../../lib/utils";
-import { Info, SendHorizontal } from "lucide-react";
+import { Info, LoaderCircle, SendHorizontal } from "lucide-react";
 // import TypingText from "./TypingText";
 // import TypingHTML from "./TypingHTML";
+
+const TypingIndicator = () => {
+  return (
+    <div className="typing-indicator">
+      <div className="typing-indicator-inner">
+        <div className="typing-indicator-content">
+          <span className="typing-indicator-text">Thinking</span>
+          <span className="copying-dots" aria-hidden="true">
+            <span>.</span>
+            <span>.</span>
+            <span>.</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Chat_window = () => {
   const [chat, setChat] = React.useState<any[]>([]);
@@ -13,16 +29,28 @@ const Chat_window = () => {
   const { mutate, isPending, isSuccess } = getChatBot(setChat, chat);
   const [firstLoad, setFirstLoad] = React.useState(true);
   const messagesRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const {
     data: chatHistoryData,
-    // isPending: isChatHistoryPending,
+    isFetching: isChatHistoryFetching,
     // error: chatHistoryError,
   } = getChatHistory(firstLoad);
   const {
     data: FirstChat,
-    // isPending: isFirstChatPending,
+    isFetching: isFirstChatFetching,
     // isSuccess: isFirstChatSuccess,
   } = getChatBotV2();
+
+  const isChatbarDisabled =
+    isPending ||
+    isFirstChatFetching ||
+    isChatHistoryFetching ||
+    !!chat[chat.length - 1]?.EOS;
+
+  const isApiPending = isPending || isFirstChatFetching || isChatHistoryFetching;
+
+  const showThinking =
+    isPending || (chat.length === 0 && (isFirstChatFetching || isChatHistoryFetching));
 
   const selectOption = async (optionText?: string) => {
     const updatedChat = [...chat];
@@ -125,6 +153,28 @@ const Chat_window = () => {
   }, [chat]);
 
   React.useEffect(() => {
+    if (!isChatbarDisabled) {
+      inputRef.current?.focus();
+    }
+  }, [isChatbarDisabled]);
+
+  React.useEffect(() => {
+    const focusChatInput = (event: KeyboardEvent) => {
+      if (!event.ctrlKey || event.key !== "/") return;
+      if (isChatbarDisabled) return;
+
+      event.preventDefault();
+      inputRef.current?.focus();
+    };
+
+    window.addEventListener("keydown", focusChatInput);
+
+    return () => {
+      window.removeEventListener("keydown", focusChatInput);
+    };
+  }, [isChatbarDisabled]);
+
+  React.useEffect(() => {
     if (
       chatHistoryData &&
       chatHistoryData.response &&
@@ -137,13 +187,16 @@ const Chat_window = () => {
   return (
     <div>
       <main className="chatbot-container container">
+        <div className="chatbot-theme-strip" aria-hidden="true" />
         <div className="chat-container">
           <div className="messages_box" ref={messagesRef}>
             {chat.map((msg, i) => {
               return (
                 <div key={i}>
                   <div className="bot-message">
-                    <img src={BotImage} alt="Bot" className="avatar" />
+                    <div className="avatar-label bot-avatar mt-2" aria-label="AI">
+                      AI
+                    </div>
 
                     <div className="block">
                       {msg.currentQues?.staticText && (
@@ -165,7 +218,7 @@ const Chat_window = () => {
                       )}
 
                       {
-                        <div className="message-content">
+                        <div className="message-content mt-2">
                           <div
                             className="option_css"
                             dangerouslySetInnerHTML={{
@@ -268,21 +321,16 @@ const Chat_window = () => {
                           ? replaceSymbols(msg.response)
                           : msg.response}
                       </div>
+                      <div className="avatar-label user-avatar" aria-label="You">
+                        You
+                      </div>
                     </div>
                   )}
                 </div>
               );
             })}
-            {!isSuccess && isPending && (
-              <div className="flex items-start justify-start">
-                <div className="_bot_response">
-                  <div className="typing">
-                    <div className="dot"></div>
-                    <div className="dot"></div>
-                    <div className="dot"></div>
-                  </div>
-                </div>
-              </div>
+            {!isSuccess && showThinking && (
+              <TypingIndicator />
             )}
           </div>
           <div className="form-container">
@@ -295,9 +343,10 @@ const Chat_window = () => {
                     className="form-control me-2 userInput inputField"
                     name="text"
                     placeholder="Type you mesage..."
-                    disabled={chat[chat.length - 1]?.EOS}
+                    disabled={isChatbarDisabled}
                     autoFocus
                     autoComplete="off"
+                    ref={inputRef}
                     value={userQues}
                     onChange={(e) => setUserQues(e.target.value)}
                   />
@@ -305,21 +354,28 @@ const Chat_window = () => {
                   <button
                     type="submit"
                     className="btn chat-send-button"
-                    disabled={chat[chat.length - 1]?.EOS}
+                    disabled={isChatbarDisabled}
                     title="Send message"
                     aria-label="Send message"
                   >
-                    <SendHorizontal color="var(--color-core-text-inverse)" size={20} />
+                    {isApiPending ? (
+                      <LoaderCircle
+                        color="var(--color-core-text-inverse)"
+                        size={20}
+                        className="spinner-icon"
+                      />
+                    ) : (
+                      <SendHorizontal color="var(--color-core-text-inverse)" size={20} />
+                    )}
                   </button>
                 </>
               ) : (
                 <div
-                  className="flex justify-center items-center gap-4 mx-auto bg-core-surface-subtle border border-core-border-strong rounded-md p-5 text-core-text"
+                  className="flex justify-center items-center gap-4 mx-auto font-semibold rounded-md p-5 text-core-text"
                   role="alert"
                 >
                   <Info color="var(--color-core-text)" size={20} />
-                  The survey has ended. You may now close this window. Thank you
-                  for your participation!
+                  The survey has ended. You may now close this window. Thank you for your participation!
                 </div>
               )}
             </form>

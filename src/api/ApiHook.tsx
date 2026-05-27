@@ -15,7 +15,7 @@ export const getChatHistory = (first: boolean) => {
     masterData = { sessionID: "" };
   }
 
-  const { data, isPending, error } = useQuery({
+  const { data, isFetching, error } = useQuery({
     queryKey: ["chat_history"],
     queryFn: async () => {
       const res = await apiRequest("post", url.chatbot_history.url, {
@@ -32,7 +32,7 @@ export const getChatHistory = (first: boolean) => {
     enabled: !!masterData["sessionID"] && first,
   });
 
-  return { data, isPending, error };
+  return { data, isFetching, error };
 };
 
 export const getChatBot = (SetChat: (data: any) => void, chat: any[]) => {
@@ -105,7 +105,7 @@ export const getChatBotV2 = () => {
   const ID = searchParams.get("ID");
   const surveyId = searchParams.get("zone");
 
-  const { data, isPending, isSuccess } = useQuery({
+  const { data, isFetching, isSuccess } = useQuery({
     queryKey: ["chatbotv2"],
     queryFn: async () => {
       const res = await apiRequest("post", url.chatbotv3.url, {
@@ -127,5 +127,5 @@ export const getChatBotV2 = () => {
     refetchOnWindowFocus: false,
   });
 
-  return { data, isPending, isSuccess };
+  return { data, isFetching, isSuccess };
 };
