@@ -2,7 +2,7 @@ import React from "react";
 import "./Chat_window.css";
 import { getChatBot, getChatBotV2, getChatHistory } from "../../api/ApiHook";
 import { replaceSymbols, setLocalStorage } from "../../lib/utils";
-import { BadgeCheck, Info, LoaderCircle, SendHorizontal } from "lucide-react";
+import { Check, Info, LoaderCircle, SendHorizontal } from "lucide-react";
 // import TypingText from "./TypingText";
 // import TypingHTML from "./TypingHTML";
 
@@ -196,11 +196,11 @@ const Chat_window = () => {
           <section className="survey-complete-view" aria-live="polite">
             <div className="survey-complete-card">
               <div className="survey-complete-logo">
-                <BadgeCheck size={30} strokeWidth={2.5} />
+                <Check size={46} strokeWidth={4} />
               </div>
-              <h1 className="survey-complete-heading">Survey Session Ended</h1>
+              <h1 className="survey-complete-heading">Survey Submitted Successfully</h1>
               <p className="survey-complete-message">
-                The survey has ended. You may now close this window. Thank you for your participation!
+                Thank you for your participation. You may now close this window!
               </p>
             </div>
           </section>
