@@ -7,17 +7,25 @@ interface Props {
   html: string;
   speed?: number;
   onComplete?: () => void;
+  happen: boolean
 }
 
 const TypingHTML = ({
   html,
   speed = 20,
-  onComplete
+  onComplete,
+  happen
 }: Props) => {
   const [content, setContent] =
     useState("");
 
   useEffect(() => {
+
+    if(!happen){
+      setContent(html)
+      return;
+    }
+
     let index = 0;
 
     setContent("");

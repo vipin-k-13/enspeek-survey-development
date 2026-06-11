@@ -1,6 +1,5 @@
 import axios from "axios";
 import { toast } from "sonner";
-import { decryptData, encFrData } from "../lib/utils";
 
 const platform_url = import.meta.env.VITE_REACT_APP_API_URL;
 
@@ -10,32 +9,8 @@ const apiClient = axios.create({
   baseURL: platform_url,
 });
 
-apiClient.interceptors.request.use(
-  (config) => {
-    // const token = localStorage.getItem("token");
-    let lcData: any = sessionStorage.getItem(encFrData());
-    let masterData = lcData ? decryptData(JSON.parse(lcData)) : null;
-    const token = masterData?.masterToken;
-    if (token) {
-      config.headers["x-access-token"] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
 apiClient.interceptors.response.use(
-  (response) => {
-    // You can access headers here
-    const token = response.headers['access-token'];
-    if (token) {
-      localStorage.setItem('token', token)
-    }
-    // Store headers in a global state or context if needed
-    return response;
-  },
+  (response) => response,
   (error) => Promise.reject(error.response || error.message)
 );
 

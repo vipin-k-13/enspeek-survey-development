@@ -20,7 +20,6 @@ export const getChatHistory = (first: boolean) => {
     queryFn: async () => {
       const res = await apiRequest("post", url.chatbot_history.url, {
         sessionID: masterData["sessionID"],
-        apiToken: masterData["token"],
         surveyID: surveyId,
         processID: studyId,
         ID: masterData["ID"],
@@ -58,7 +57,6 @@ export const getChatBot = (SetChat: (data: any) => void, chat: any[]) => {
         status: payload.status,
         flag: payload.flag,
         sessionID: masterData["sessionID"],
-        apiToken: masterData["token"],
         surveyID: surveyId,
         processID: studyId,
         ID: masterData["ID"],
@@ -69,6 +67,7 @@ export const getChatBot = (SetChat: (data: any) => void, chat: any[]) => {
     },
     onSuccess: (data: any) => {
       if (data && data.response && data.response.length > 0) {
+        console.log(data.response)
         SetChat((prev: any) => {
           const updatedChat = [...prev];
 
@@ -87,7 +86,7 @@ export const getChatBot = (SetChat: (data: any) => void, chat: any[]) => {
           lastChat.submitted = true;
           lastChat.loading = false;
 
-          return [...updatedChat, data.response[0]];
+          return [...updatedChat, ...data.response];
         });
       }
     },
@@ -113,7 +112,6 @@ export const getChatBotV2 = () => {
         status: "",
         flag: 0,
         sessionID: masterData["sessionID"],
-        apiToken: masterData["token"],
         surveyID: surveyId,
         processID: studyId,
         ID: ID,

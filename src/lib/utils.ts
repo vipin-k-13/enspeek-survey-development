@@ -30,7 +30,13 @@ export const replaceSymbols = (response: string): string => {
 export function getLocalStorage() {
     let lcData: any = sessionStorage.getItem(encFrData());
     if (!lcData) return ({ sessionID: "", token: "" });
-    let parsedData = JSON.parse(lcData);
+    let parsedData = null;
+    try {
+        parsedData = JSON.parse(lcData);
+    } catch (e) {
+        console.error("Failed to parse local storage data:", e);
+        return { sessionID: "", token: "" };
+    }
     let masterData = decryptData(parsedData);
     return masterData;
 }
